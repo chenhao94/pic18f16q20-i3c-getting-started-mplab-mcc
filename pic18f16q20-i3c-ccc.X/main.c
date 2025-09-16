@@ -11,7 +11,7 @@
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+? [2023] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -31,6 +31,7 @@
     THIS SOFTWARE.
 */
 #include "mcc_generated_files/system/system.h"
+#include <string.h>
 
 /*
     Main application
@@ -38,6 +39,7 @@
 
 void UnsupportedCCCReceivedCallback(void);
 void SupportedCCCReceivedCallback(void);
+void HotJoinRequest(void);
 
 volatile enum I3C_CCC receivedunsupportedCCC;
 volatile enum I3C_CCC receivedsupportedCCC;
@@ -64,6 +66,7 @@ int main(void)
     // Disable the Global Interrupts 
     //INTERRUPT_GlobalInterruptDisable(); 
     
+    HotJoinRequest();
     printf("Waiting for dynamic address assignment\r\n");
     while(I3C1_OperatingModeGet() != I3C_TARGET_OPERATING_MODE_I3C_SDR);
     printf("Dynamic address is assigned\r\n");
@@ -131,4 +134,49 @@ void SupportedCCCReceivedCallback(void)
 {
     supportedCCCreceived = true;
     receivedsupportedCCC = I3C1_LastCCCReceivedGet();
+}
+
+void HotJoinRequest(void)
+{  
+    enum I3C_TARGET_HJ_REQUEST_ERROR hJRequestError = I3C_TARGET_HJ_REQUEST_NO_ERROR;
+    
+	printf("Type 'send' to send Hot Join request\r\n");
+	char input[10];
+	while(1)
+	{
+		scanf("%s", input);
+		if(strcmp(input, "send") == 0)
+		{
+			break;
+		}
+		else
+		{
+			printf("Invalid command '%s'. Type 'send' to send Hot Join request\r\n", input);
+		}
+	}
+	printf("Command 'send' received\r\n\n");
+    printf("Requesting the Hot Join\r\n");
+    hJRequestError = I3C_Target_HotJoinRequest();
+
+	if(hJRequestError == I3C_TARGET_HJ_REQUEST_NO_ERROR)
+	{
+		printf("HotJoinRequest: No error\r\n\n");
+	}
+	else if(hJRequestError == I3C_TARGET_HJ_REQUEST_NOT_HJ_CAPABLE)
+	{
+		printf("HotJoinRequest: Target is not HJ capable\r\n\n");
+	}
+	else if(hJRequestError == I3C_TARGET_HJ_REQUEST_DYNAMIC_ADDRESS_ALREADY_ASSIGNED)
+	{
+		printf("HotJoinRequest: Dynamic address has already been assigned\r\n\n");
+	}
+	else if(hJRequestError == I3C_TARGET_HJ_REQUEST_HJ_DISABLED_ON_BUS)
+	{
+		printf("HotJoinRequest: HJ is disabled on the bus\r\n\n");
+	}
+
+	printf("Waiting for dynamic address\r\n");
+	//Wait for Hot Join to complete
+	while(I3C_Target_HotJoinStatusGet() == I3C_TARGET_HJ_PENDING);
+	printf("Hot-Join completed successfully with dynamic address = 0x%02X\r\n\n", I3C1DADR);
 }
