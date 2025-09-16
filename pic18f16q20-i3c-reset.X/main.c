@@ -11,7 +11,7 @@
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+? [2023] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -31,6 +31,8 @@
     THIS SOFTWARE.
 */
 #include "mcc_generated_files/system/system.h"
+
+#include <string.h>
 
 /*
     Main application
@@ -165,10 +167,21 @@ void HotJoinRequest(void)
 {  
     enum I3C_TARGET_HJ_REQUEST_ERROR hJRequestError = I3C_TARGET_HJ_REQUEST_NO_ERROR;
     
-    printf("\n\nPress switch to send Hot Join request\r\n");
-	//Wait for switch press
-	while(SW0_GetValue() == 1);
-	printf("Switch is pressed\r\n\n");
+	printf("Type 'send' to send Hot Join request\r\n");
+	char input[10];
+	while(1)
+	{
+		scanf("%s", input);
+		if(strcmp(input, "send") == 0)
+		{
+			break;
+		}
+		else
+		{
+			printf("Invalid command '%s'. Type 'send' to send Hot Join request\r\n", input);
+		}
+	}
+	printf("Command 'send' received\r\n\n");
      
     printf("Requesting the Hot Join\r\n");
     hJRequestError = I3C_Target_HotJoinRequest();
