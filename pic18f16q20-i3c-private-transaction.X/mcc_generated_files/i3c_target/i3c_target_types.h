@@ -13,7 +13,7 @@
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -171,6 +171,30 @@ enum I3C_TARGET_IBI_REQUEST_ERROR
     I3C_TARGET_IBI_REQUEST_SEND_BUFFER_SIZE_EXCEEDED,
     I3C_TARGET_IBI_REQUEST_NOT_IN_I3C_MODE,
     I3C_TARGET_IBI_REQUEST_IBI_DISABLED_ON_BUS
+}; 
+
+/**
+ @ingroup i3c_target_driver
+ @enum I3C_TARGET_HJ_REQUEST_ERROR
+ @brief Defines the error states of the Hot-Join request operation.
+*/
+enum I3C_TARGET_HJ_REQUEST_ERROR
+{
+    I3C_TARGET_HJ_REQUEST_NO_ERROR,
+    I3C_TARGET_HJ_REQUEST_NOT_HJ_CAPABLE,
+    I3C_TARGET_HJ_REQUEST_DYNAMIC_ADDRESS_ALREADY_ASSIGNED,
+    I3C_TARGET_HJ_REQUEST_HJ_DISABLED_ON_BUS
+}; 
+
+/**
+ @ingroup i3c_target_driver
+ @enum I3C_TARGET_HJ_STATUS
+ @brief Defines the status of the Hot-Join operation.
+*/
+enum I3C_TARGET_HJ_STATUS
+{
+    I3C_TARGET_HJ_COMPLETED_OR_NOT_STARTED,
+    I3C_TARGET_HJ_PENDING
 }; 
 
 /**

@@ -13,7 +13,7 @@
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -98,8 +98,8 @@ void I3C1_Initialize(void)
     I3C1BTOH = 0xF;
 	// RETRY 3; 
     I3C1RETRY = 0x3;
-	// HJCAP Not capable; 
-    I3C1FEAT = 0x0;
+	// HJCAP Capable; 
+    I3C1FEAT = 0x1;
 	// SADR 0x00; 
     I3C1SADR = 0x0;
 	// MWLL 0x0; 
@@ -308,6 +308,56 @@ void I3C1_TxBufferFIFOClear(void)
 void I3C1_RxBufferFIFOClear(void)                                   
 {
     I3C1CON0bits.CLRRXB = 1;  
+}
+
+enum I3C_TARGET_HJ_REQUEST_ERROR I3C1_HotJoinRequest(void) 
+{
+    enum I3C_TARGET_HJ_REQUEST_ERROR status = I3C_TARGET_HJ_REQUEST_NO_ERROR;
+    
+    // If target is not Hot-Join capable
+    if(!I3C1FEATbits.HJCAP)
+    {
+        status = I3C_TARGET_HJ_REQUEST_NOT_HJ_CAPABLE;
+    }
+	// If target already has a Dynamic Address assigned
+    else if((I3C1_OperatingModeGet() ==  I3C_TARGET_OPERATING_MODE_I3C_SDR) 
+	|| (I3C1_OperatingModeGet() ==  I3C_TARGET_OPERATING_MODE_I3C_HDR))
+    {
+        status =  I3C_TARGET_HJ_REQUEST_DYNAMIC_ADDRESS_ALREADY_ASSIGNED;
+    }
+	// If Hot-Join is not enabled on the bus
+    else if (!I3C1ECbits.HJEN)
+    {
+        status = I3C_TARGET_HJ_REQUEST_HJ_DISABLED_ON_BUS;
+    }
+	// Request for Hot-Join
+    else
+    {
+       I3C1CON0bits.HJREQ = 1; 
+    }
+	
+    return status;
+}
+
+enum I3C_TARGET_HJ_STATUS  I3C1_HotJoinStatusGet(void)       
+{
+	enum I3C_TARGET_HJ_STATUS hotJoinStatus = I3C_TARGET_HJ_COMPLETED_OR_NOT_STARTED;
+	
+    if(I3C1CON0bits.HJREQ == 0)
+    {
+        hotJoinStatus = I3C_TARGET_HJ_COMPLETED_OR_NOT_STARTED;
+    }
+    else 
+    {
+        hotJoinStatus = I3C_TARGET_HJ_PENDING;
+    }
+	
+	return hotJoinStatus;
+}  
+
+bool I3C1_IsHotJoinEnabledOnBus(void)                                      
+{
+    return (I3C1ECbits.HJEN);   
 }
 
 enum I3C_TARGET_IBI_REQUEST_ERROR I3C1_IBIRequest(uint8_t *payloadBuf, uint16_t payloadLen) 
