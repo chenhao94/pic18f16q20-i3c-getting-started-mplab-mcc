@@ -32,6 +32,7 @@
 */
 #include "mcc_generated_files/system/system.h"
 #include <string.h>
+#include <stdio.h>
 
 /*
     Main application

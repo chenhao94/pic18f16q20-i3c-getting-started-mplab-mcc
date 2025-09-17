@@ -13,7 +13,7 @@
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -195,6 +195,31 @@ void I3C1_TxBufferFIFOClear(void);
  * @return None.  
  */
 void I3C1_RxBufferFIFOClear(void);
+
+/**
+ * @ingroup i3c_target_driver
+ * @brief Initiates the target's request for a Hot-Join to an I3C bus.
+ * @param None. 
+ * @return Error status of the Hot-Join request as described in I3C_TARGET_HJ_REQUEST_ERROR.  
+ */
+enum I3C_TARGET_HJ_REQUEST_ERROR I3C1_HotJoinRequest(void);
+
+/**
+ * @ingroup i3c_target_driver
+ * @brief Returns the status of a Hot-Join request operation by a target.
+ * @param None. 
+ * @return Status of a Hot-Join request operation as described in I3C_TARGET_HJ_STATUS.  
+ */
+enum I3C_TARGET_HJ_STATUS I3C1_HotJoinStatusGet(void);
+
+/**
+ * @ingroup i3c_target_driver
+ * @brief Checks if the Hot-Join capability is enabled on the bus.   
+ * @param None.  
+ * @retval True - Hot-Join is enabled on the bus.
+ * @retval False - Hot-Join is not enabled on the bus.   
+ */
+bool I3C1_IsHotJoinEnabledOnBus(void);
 
 /**
  * @ingroup i3c_target_driver
@@ -467,6 +492,21 @@ void I3C1_Reset_ISR(void);
  * @brief Defines the Custom Name for I3C1_RxBufferFIFOClear() API.
  */
 #define I3C_Target_RxBufferFIFOClear I3C1_RxBufferFIFOClear
+/**
+ * @ingroup i3c_target_driver
+ * @brief Defines the Custom Name for I3C1_HotJoinRequest() API.
+ */
+#define I3C_Target_HotJoinRequest I3C1_HotJoinRequest
+/**
+ * @ingroup i3c_target_driver
+ * @brief Defines the Custom Name for I3C1_HotJoinStatusGet() API.
+ */
+#define I3C_Target_HotJoinStatusGet I3C1_HotJoinStatusGet
+/**
+ * @ingroup i3c_target_driver
+ * @brief Defines the Custom Name for I3C1_IsHotJoinEnabledOnBus() API.
+ */
+#define I3C_Target_IsHotJoinEnabledOnBus I3C1_IsHotJoinEnabledOnBus
 /**
  * @ingroup i3c_target_driver
  * @brief Defines the Custom Name for I3C1_IBIRequest() API.
