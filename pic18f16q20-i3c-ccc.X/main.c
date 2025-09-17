@@ -77,7 +77,7 @@ int main(void)
         if (unsupportedCCCreceived) 
         {
             unsupportedCCCreceived = false;
-            printf("\r\nUnsupported CCC is received\r\n");
+            printf("\r\nUnsupported CCC is received (0x%x)\r\n", (uint8_t)receivedunsupportedCCC);
             
             switch (receivedunsupportedCCC) 
             {
@@ -101,7 +101,7 @@ int main(void)
         if (supportedCCCreceived) 
         {
             supportedCCCreceived = false;
-            printf("\r\nSupported CCC is received\r\n");
+            printf("\r\nSupported CCC is received (0x%x)\r\n", (uint8_t)receivedsupportedCCC);
             
             switch (receivedsupportedCCC) 
             {
@@ -140,22 +140,6 @@ void SupportedCCCReceivedCallback(void)
 void HotJoinRequest(void)
 {  
     enum I3C_TARGET_HJ_REQUEST_ERROR hJRequestError = I3C_TARGET_HJ_REQUEST_NO_ERROR;
-    
-	printf("Type 'send' to send Hot Join request\r\n");
-	char input[10];
-	while(1)
-	{
-		scanf("%s", input);
-		if(strcmp(input, "send") == 0)
-		{
-			break;
-		}
-		else
-		{
-			printf("Invalid command '%s'. Type 'send' to send Hot Join request\r\n", input);
-		}
-	}
-	printf("Command 'send' received\r\n\n");
     printf("Requesting the Hot Join\r\n");
     hJRequestError = I3C_Target_HotJoinRequest();
 
